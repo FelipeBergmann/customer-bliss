@@ -17,7 +17,7 @@ export function Header() {
           <Binoculars size={32} />
           <span>Iniciar Pesquisa</span>
         </NavLink>
-        <NavLink to="/customer/management">
+        <NavLink to="/customer">
           <UserGear size={32} />
           <span>Gerenciar Clientes</span>
         </NavLink>
