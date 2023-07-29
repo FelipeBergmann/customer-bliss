@@ -17,6 +17,7 @@ export function CustomerRegistrationPage() {
       },
       { message: 'CNPJ inválido.' }
     ),
+    registrationDate: zod.date(),
   });
 
   type CustomerFormType = zod.infer<typeof customerFormValidationSchema>;
@@ -27,9 +28,8 @@ export function CustomerRegistrationPage() {
     reset,
     formState: { errors },
   } = useForm<CustomerFormType>();
-  const handleOnSubmit = () => {
-    console.log(register);
-
+  const handleOnSubmit = (data: CustomerFormType) => {
+    console.log(data);
     reset();
   };
   return (
@@ -60,7 +60,18 @@ export function CustomerRegistrationPage() {
         </div>
 
         <div>
-          <SubmitButton>Enviar</SubmitButton>
+          <label>Data em que se tornou cliente*:</label>
+          <input
+            type="date"
+            {...register('registrationDate', { required: true })}
+          />
+          {errors.registrationDate && (
+            <ErrorMessage>Este campo é obrigatório.</ErrorMessage>
+          )}
+        </div>
+
+        <div>
+          <SubmitButton type="submit">Enviar</SubmitButton>
         </div>
       </CustomerRegistrationFormContainer>
     </form>

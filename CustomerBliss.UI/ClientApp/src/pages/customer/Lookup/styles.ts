@@ -27,7 +27,6 @@ export const LookupCustomerContainer = styled.div`
       border-style: solid;
       border-radius: 8px;
       box-shadow: 0px 0px 5px rgba(66, 66, 66, 0.75);
-      text-shadow: 0px 0px 5px rgba(66, 66, 66, 0.75);
     }
   }
 `;
