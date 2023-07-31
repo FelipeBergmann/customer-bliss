@@ -18,3 +18,99 @@ dist/
 # Arquivos de cache
 *.log
 *.cache
+
+# Arquivos gerados automaticamente
+obj/
+bin/
+*.dll
+*.pdb
+*.exe
+*.cache
+
+# Arquivos de publicação
+pub/
+*.publishsettings
+*.pubxml
+
+# Arquivos de log e depuração
+*.log
+*.vscode
+*.vs/
+*_i.c
+*_p.c
+*.suo
+*.sln.docstates
+
+# Arquivos temporários
+*.tmp
+*.user
+*.vspscc
+
+# Arquivos de configuração de usuário
+*.userprefs
+*.suo
+*.vssscc
+*.vspscc
+*.vshost.exe
+
+# Ferramentas de construção e pacotes NuGet
+*.nuget.props
+*.nuget.targets
+*.nupkg
+packages/
+
+# Arquivos de dependências de construção
+[Bb]in/
+[Oo]bj/
+
+# Arquivos de projeto do Visual Studio
+*.csproj
+*.sln
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Arquivos temporários gerados por Roslyn
+*.rds.*
+*.rptproj.bak
+*.rptproj.user
+
+# Cache do test runner
+TestResults/
+
+# Arquivos de log da ferramenta de construção
+msbuild.log
+msbuild.err
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+**/Properties/PublishProfiles/
+_PublishedWebsites/
+*.swp
+*.*.cache
+*.dotnet-*
+*.nuget.props
+*.nuget.targets
+**/.template.config/.template.config
+
+# Visual Studio Code
+.vscode/
+
+# Outros
+_ReSharper.*
+*.ReSharper*
+_ReSharper*/
+*.resharper
+*.resharper.user
+*.resharper.*.user
+ResharperGeneratedFiles/
+ReSharperDotCover/
+*.dotCover
+*.dotCover.*
+*.TeamCity
+*.ncrunch*
+TestResult.xml
+[Jj]ava[Ss]cript

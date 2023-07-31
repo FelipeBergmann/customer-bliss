@@ -1,12 +1,15 @@
-﻿namespace CustomerBliss.API.DTO.Customer;
+﻿using CustomerBliss.Domain.Entities.Customers;
+
+namespace CustomerBliss.API.DTO.Customer;
 
 public record struct CustomerDto(Guid Id,
                           string Name,
                           string ContactName,
                           string CompanyDocument,
-                          int LastReviewScore,
+                          double? LastReviewScore,
                           CustomerCategory Category,
-                          string TotalCustomers,
-                          DateOnly InitialDate);
+                          DateOnly? InitialDate);
 
-public record struct CustomerRequest(string Name, string ContactName, string CompanyDocument, DateOnly InitialDate);
+public record struct ListCustomerResponse(int TotalCustomerCount, List<CustomerDto> Customers);
+public record struct CreateCustomerRequest(string Name, string ContactName, string CompanyDocument, DateOnly InitialDate);
+public record struct CreateCustomerResponse(Guid Id);

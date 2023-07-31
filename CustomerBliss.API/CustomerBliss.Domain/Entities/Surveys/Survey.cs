@@ -2,12 +2,16 @@
 
 namespace CustomerBliss.Domain.Entities.Surveys;
 
-public class Survey
+public class Survey : IEntity
 {
     private double? _nps = null;
     private List<SurveyCustomerReview> _reviews;
     private bool _hasReviewsChange = false;
 
+    protected Survey()
+    {
+        
+    }
     public Survey(Guid id, int period, List<SurveyCustomerReview> reviews)
     {
         Id = id;

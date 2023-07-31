@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CustomerBliss.API.Controllers;
 
-[ApiController]
-[Route("[controller]")]
+[ApiVersion("1.0")]
+[ApiController, Route("api/v{version:apiVersion}/[controller]")]
 public class SurveyController : ControllerBase
 {
     private readonly ILogger<SurveyController> _logger;

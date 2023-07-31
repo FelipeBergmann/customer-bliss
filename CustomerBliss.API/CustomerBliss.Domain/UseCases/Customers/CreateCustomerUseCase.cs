@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CustomerBliss.Domain.UseCases.Customers;
 
-public record CreateCustomerCommand(string Name, string ContactName, string CompanyDocument, DateOnly InitialDate);
+public record CreateCustomerCommand(string Name, string ContactName, string CompanyDocument, DateOnly? InitialDate);
 public record CreateCustomerCommandResponse(Guid Id);
 
 public interface ICreateCustomerUseCase : IUseCase<CreateCustomerCommand, CreateCustomerCommandResponse>
@@ -17,10 +17,10 @@ public interface ICreateCustomerUseCase : IUseCase<CreateCustomerCommand, Create
 public class CreateCustomerUseCase : UseCaseBase<CreateCustomerCommand, CreateCustomerCommandResponse>, ICreateCustomerUseCase
 {
     private readonly ICustomerRepository _customerRepository;
-    public CreateCustomerUseCase(ILogger logger,
-                                 AbstractValidator<CreateCustomerCommand>? validator,
+    public CreateCustomerUseCase(ILogger<CreateCustomerUseCase> logger,
+                                 
                                  ICustomerRepository customerRepository)
-        : base(logger, validator)
+        : base(logger, null)
     {
         _customerRepository = customerRepository;
     }
@@ -34,7 +34,7 @@ public class CreateCustomerUseCase : UseCaseBase<CreateCustomerCommand, CreateCu
             Fault(UseCaseErrorType.BadRequest, $"{nameof(command.CompanyDocument)} must be unique");
         }
 
-        var newCustomer = new Customer(Guid.NewGuid(), command.Name, command.ContactName, command.CompanyDocument, command.InitialDate);
+        var newCustomer = new Customer(Guid.NewGuid(), command.Name, command.ContactName, command.CompanyDocument, command.InitialDate ?? DateOnly.FromDateTime(DateTime.Today));
         await _customerRepository.AddAsync(newCustomer);
         await _customerRepository.SaveChangesAsync();
 

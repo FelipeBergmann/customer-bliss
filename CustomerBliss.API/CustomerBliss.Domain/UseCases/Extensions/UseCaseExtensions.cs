@@ -7,8 +7,8 @@ public static class UseCaseExtensions
 {
     public static IServiceCollection AddUseCases(this IServiceCollection services)
     {
-        services.AddSingleton<ICreateCustomerUseCase, CreateCustomerUseCase>();
-        services.AddSingleton<IFilterCustomerQueryUseCase, FilterCustomerQueryUseCase>();
+        services.AddTransient<ICreateCustomerUseCase, CreateCustomerUseCase>();
+        services.AddTransient<IFilterCustomerQueryUseCase, FilterCustomerQueryUseCase>();
 
         return services;
     } 

@@ -1,4 +1,4 @@
-﻿namespace CustomerBliss.API.DTO.Customer;
+﻿namespace CustomerBliss.Domain.Entities.Customers;
 
 public enum CustomerCategory
 {
