@@ -7,22 +7,29 @@ public class SurveyCustomerReview
 {
     protected SurveyCustomerReview()
     {
-        
+
     }
-    public SurveyCustomerReview(Guid surveyId, Guid customerId, int reviewScore, string reason)
+    public SurveyCustomerReview(Guid surveyId, Guid customerId, int? reviewScore, string reason)
     {
         SurveyId = surveyId;
         CustomerId = customerId;
         ReviewScore = reviewScore;
         Reason = reason;
-        Category = new SurveyReviewCategory(reviewScore);
     }
 
+    private SurveyReviewCategory? _surveyCategory = null;
+
     public Guid SurveyId { get; set; }
-    public Survey Survey { get; set; }
+    public virtual Survey Survey { get; set; }
     public Guid CustomerId { get; set; }
-    public Customer Customer { get; set; }
-    public int ReviewScore { get; set; }
+    public virtual Customer Customer { get; set; }
+    public int? ReviewScore { get; set; }
     public string Reason { get; set; }
-    public SurveyReviewCategory Category { get; private set; }
+    public SurveyReviewCategory Category => _surveyCategory ?? SetSurveyCategory(ReviewScore);
+
+    private SurveyReviewCategory SetSurveyCategory(int? reviewScore)
+    {
+        _surveyCategory ??= new(reviewScore);
+        return _surveyCategory.Value;
+    }
 }

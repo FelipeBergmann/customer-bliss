@@ -1,0 +1,39 @@
+# For more info on HTTP files go to https://aka.ms/vs/httpfile
+@rootUrl=https://localhost:44323/api/v1/survey
+@samplePeriod=202309
+
+GET {{rootUrl}}
+
+###
+
+GET {{rootUrl}}/{{samplePeriod}}
+
+###
+
+POST {{rootUrl}}
+Content-Type: application/json
+
+{{samplePeriod}}
+
+
+###
+
+POST {{rootUrl}}/2917d601-d95a-4c37-93a5-ffdb0c516103/Customer
+Content-Type: application/json
+
+[
+   "0898acb6-39e8-421e-aae1-be5bc9267e9c"
+]
+
+###
+
+POST {{rootUrl}}/2917d601-d95a-4c37-93a5-ffdb0c516103/Review
+Content-Type: application/json
+
+[
+  {
+    "customerId": "0898acb6-39e8-421e-aae1-be5bc9267e9c",
+    "reviewScore": 10,
+    "reason": "Best service ever!"
+  }
+]

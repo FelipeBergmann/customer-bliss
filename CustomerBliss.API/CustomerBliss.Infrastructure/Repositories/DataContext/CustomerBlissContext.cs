@@ -2,6 +2,7 @@
 using CustomerBliss.Domain.Entities.Surveys;
 using CustomerBliss.Infrastructure.Repositories.Mappings.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace CustomerBliss.Infrastructure.Repositories.DataContext;
 
@@ -9,7 +10,6 @@ public class CustomerBlissContext : DbContext
 {
     public CustomerBlissContext(DbContextOptions<CustomerBlissContext> options) : base(options)
     {
-        this.ChangeTracker.LazyLoadingEnabled = false;
     }
 
     public DbSet<Customer> Customers { get; set; }
@@ -23,5 +23,17 @@ public class CustomerBlissContext : DbContext
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    => optionsBuilder.LogTo(Console.WriteLine);
+    {
+      
+        optionsBuilder.UseLazyLoadingProxies();
+
+        var loggerFactory = LoggerFactory.Create(builder =>
+        {
+            builder.AddConsole();
+            builder.SetMinimumLevel(LogLevel.Debug);
+        });
+
+        optionsBuilder.UseLoggerFactory(loggerFactory);
+        optionsBuilder.EnableSensitiveDataLogging();
+    }
 }

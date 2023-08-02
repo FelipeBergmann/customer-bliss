@@ -18,7 +18,7 @@ public class CreateCustomerUseCase : UseCaseBase<CreateCustomerCommand, CreateCu
 {
     private readonly ICustomerRepository _customerRepository;
     public CreateCustomerUseCase(ILogger<CreateCustomerUseCase> logger,
-                                 
+
                                  ICustomerRepository customerRepository)
         : base(logger, null)
     {
@@ -27,11 +27,14 @@ public class CreateCustomerUseCase : UseCaseBase<CreateCustomerCommand, CreateCu
 
     protected override async Task<CreateCustomerCommandResponse> Execute(CreateCustomerCommand command)
     {
-        var customer = await _customerRepository.FindAsync(c => c.CompanyDocument == command.CompanyDocument);
-
-        if (customer is not null)
+        if (command.CompanyDocument is not null)
         {
-            Fault(UseCaseErrorType.BadRequest, $"{nameof(command.CompanyDocument)} must be unique");
+            var customer = await _customerRepository.FindAsync(c => c.CompanyDocument == command.CompanyDocument);
+
+            if (customer is not null)
+            {
+                Fault(UseCaseErrorType.BadRequest, $"{nameof(command.CompanyDocument)} must be unique");
+            }
         }
 
         var newCustomer = new Customer(Guid.NewGuid(), command.Name, command.ContactName, command.CompanyDocument, command.InitialDate ?? DateOnly.FromDateTime(DateTime.Today));

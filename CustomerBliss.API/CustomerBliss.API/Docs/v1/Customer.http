@@ -1,0 +1,24 @@
+# For more info on HTTP files go to https://aka.ms/vs/httpfile
+@rootUrl=https://localhost:44323/api/v1/customer
+
+GET {{rootUrl}}
+
+###
+
+GET {{rootUrl}}?OrderByLastReviewDate=true&orderByDesc=false
+
+###
+
+GET {{rootUrl}}?name=Bergmann&page=0&pageSize=50
+
+###
+
+POST {{rootUrl}}
+Content-Type: application/json
+
+{
+  "name": "Company Inc",
+  "contactName": "João Snow",
+  "companyDocument": "3123131312",
+  "initialDate": "2023-07-31"
+}

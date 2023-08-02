@@ -1,8 +1,9 @@
 ﻿using CustomerBliss.API.DTO.Customer;
-using CustomerBliss.Domain.Entities.Customers;
+using CustomerBliss.BuildingBlocks.Pagination;
 using CustomerBliss.Domain.Services.Customers;
 using CustomerBliss.Domain.UseCases.Customers;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace CustomerBliss.API.Controllers;
 
@@ -18,22 +19,38 @@ public class CustomerController : ControllerBase
     }
 
     [HttpGet(Name = "ListCustomer")]
-    public async Task<ActionResult<ListCustomerResponse>> ListCustomer([FromQuery]string name, [FromServices] IFilterCustomerQueryUseCase useCase, [FromServices] ICustomerCategoryManager customerCategoryManager)
+    public async Task<ActionResult<Paginated<ListCustomerResponse>>> ListCustomer([FromQuery] FilterCustomerQuery command,
+        [FromServices] IFilterCustomerQueryUseCase useCase,
+        [FromServices] IGetCountCustomerUseCase countCustomerUseCase,
+        [FromServices] ICustomerCategoryManager customerCategoryManager,
+        [FromQuery] int page = 0,
+        [FromQuery] int pageSize = 50)
     {
-        var queryResult = await useCase.Resolve(new FilterCustomerQuery(name));
+        var queryResult = await useCase.Resolve(new PaginationRequest<FilterCustomerQuery>()
+        {
+            Page = page,
+            PageSize = pageSize,
+            Data = command
+        });
 
-        var customers = queryResult?.Customers.Select(c => 
+        var customers = queryResult?.Data.Customers.Select(c =>
             new CustomerDto(c.Id,
                             c.Name,
                             c.ContactName,
                             c.CompanyDocument,
                             c.LastReviewScore,
+                            c.LastReviewDate,
                             customerCategoryManager.ProcessCategory(c.LastReviewScore),
                             DateOnly.FromDateTime(DateTime.Today))).ToList();
 
-        var response = new ListCustomerResponse(queryResult.TotalCustomerRegistered, customers);
+        var totalCount = await countCustomerUseCase.Resolve(new GetCountCustomerCommand());
 
-        return response;
+        var response = new ListCustomerResponse(totalCount?.Total ?? 0, customers);
+
+        return Ok(new Paginated<ListCustomerResponse>()
+        {
+            Data = response
+        });
     }
 
     [HttpPost(Name = "CreateCustomer")]
@@ -41,7 +58,7 @@ public class CustomerController : ControllerBase
     {
         var response = await createCustomerUseCase.Resolve(new CreateCustomerCommand(customer.Name, customer.ContactName, customer.CompanyDocument, customer.InitialDate));
 
-        return new CreateCustomerResponse(response.Id);
+        return Created("", new CreateCustomerResponse(response.Id));
     }
 
 }

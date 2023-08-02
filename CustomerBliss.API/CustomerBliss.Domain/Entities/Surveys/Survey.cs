@@ -10,16 +10,16 @@ public class Survey : IEntity
 
     protected Survey()
     {
-        
+
     }
-    public Survey(Guid id, int period, List<SurveyCustomerReview> reviews)
+    public Survey(Guid id, int period, List<SurveyCustomerReview>? reviews = null)
     {
         Id = id;
         Period = period;
-        _reviews = reviews;
+        _reviews = reviews ?? new();
     }
 
-    public Survey(int period, List<SurveyCustomerReview> reviews) : this(Guid.NewGuid(), period, reviews) { }
+    public Survey(int period, List<SurveyCustomerReview>? reviews = null) : this(Guid.NewGuid(), period, reviews) { }
 
     public Guid Id { get; set; }
     public int Period { get; set; }
@@ -30,10 +30,14 @@ public class Survey : IEntity
         < 80 => SurveyTargetResult.Tolerance,
         _ => SurveyTargetResult.Accomplished,
     };
-    public IReadOnlyCollection<SurveyCustomerReview> Reviews { get => _reviews; }
+    public virtual IReadOnlyCollection<SurveyCustomerReview> Reviews => _reviews;
+    public SurveyStatus Status { get; set; } = SurveyStatus.Initialized;
 
     public Survey AddReview(SurveyCustomerReview review)
     {
+        if (Status == SurveyStatus.Finalized)
+            throw new ApplicationException("This survey is finalized you cannot add new reviews");
+
         _reviews ??= new List<SurveyCustomerReview>();
 
         _reviews.Add(review);
@@ -45,6 +49,9 @@ public class Survey : IEntity
 
     public Survey AddReviewRange(ICollection<SurveyCustomerReview> reviews)
     {
+        if (Status == SurveyStatus.Finalized)
+            throw new ApplicationException("This survey is finalized you cannot add new reviews");
+
         _reviews ??= new List<SurveyCustomerReview>();
 
         _reviews.AddRange(reviews);
@@ -54,9 +61,32 @@ public class Survey : IEntity
         return this;
     }
 
+    public Survey ClearReviews()
+    {
+        if (_reviews is not null)
+        {
+            _reviews.Clear();
+            _hasReviewsChange = true;
+        }
+        return this;
+    }
+
+    public Survey FinalizeSurvey()
+    {
+        Status = SurveyStatus.Finalized;
+
+        return this;
+    }
+
     private double SetNPS()
     {
         _hasReviewsChange = false;
+
+        if (Reviews is null || Reviews.Count < 1)
+        {
+            _nps = null;
+            return 0d;
+        }
 
         _nps = Math.Round(CalculateNPS(CountPositiveReviews(), CountNegativeReviews(), Reviews.Count), 2);
         return _nps.Value;
@@ -64,6 +94,6 @@ public class Survey : IEntity
 
     private static double CalculateNPS(int positive, int negative, int total) => (Convert.ToDouble(positive - negative) / total) * 100;
 
-    private int CountPositiveReviews() => Reviews.Count(r => r.Category == SurveyReviewCategory.Positive);
-    private int CountNegativeReviews() => Reviews.Count(r => r.Category == SurveyReviewCategory.Negative);
+    private int CountPositiveReviews() => Reviews?.Count(r => r.Category == SurveyReviewCategory.Positive) ?? 0;
+    private int CountNegativeReviews() => Reviews?.Count(r => r.Category == SurveyReviewCategory.Negative) ?? 0;
 }

@@ -24,5 +24,6 @@ public class Customer : IEntity
     public string CompanyDocument { get; set; }
     public double? LastReviewScore { get; set; }
     public DateOnly InitialDate { get; set; }
-    public IEnumerable<SurveyCustomerReview>? Reviews { get; set; }
+    public DateOnly? LastReviewDate { get; set; }
+    public virtual IEnumerable<SurveyCustomerReview>? Reviews { get; set; }
 }

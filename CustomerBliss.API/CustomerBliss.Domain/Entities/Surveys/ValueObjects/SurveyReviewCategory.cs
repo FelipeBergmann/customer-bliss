@@ -1,13 +1,13 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
 namespace CustomerBliss.Domain.Entities.Surveys.ValueObjects;
-
 public struct SurveyReviewCategory
 {
-    public SurveyReviewCategory(double score)
+    public SurveyReviewCategory(int? score)
     {
         Category = score switch
         {
+            null => "not scored",
             < 0 or > 10 => throw new ArgumentException($"{nameof(score)} must be between 0 and 10"),
             <= 6 => "Negative",
             <= 8 => "Neutral",

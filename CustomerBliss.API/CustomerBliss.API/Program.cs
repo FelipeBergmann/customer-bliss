@@ -58,9 +58,7 @@ builder.Services.AddUseCases()
                 .AddServices()
                 .AddRepositories();
 
-builder.Logging.ClearProviders().AddConsole();
-
-
+//builder.Logging.ClearProviders().AddConsole();
 
 var app = builder.Build();
 

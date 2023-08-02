@@ -17,7 +17,7 @@ public class SurveyReviewCategoryShould : SurveyReviewCategoryUnitTestBase
     [InlineData(8, SurveyReviewCategory.Neutral)]
     [InlineData(9, SurveyReviewCategory.Positive)]
     [InlineData(10, SurveyReviewCategory.Positive)]
-    public void SurveyReviewCategory_New_ShouldSetCorrectCategory(double score, string expectedCategory)
+    public void SurveyReviewCategory_New_ShouldSetCorrectCategory(int score, string expectedCategory)
     {
         //arrange
         //act
@@ -30,9 +30,9 @@ public class SurveyReviewCategoryShould : SurveyReviewCategoryUnitTestBase
 
     [Trait("category", "unit")]
     [Theory(DisplayName = "SurveyReviewCategory - new - Should throw ArgumentException when score is out of range (0-10)")]
-    [InlineData(10.01)]
-    [InlineData(-0.01)]
-    public void SurveyReviewCategory_New_ShouldThrowArgumentExceptionWhenScoreIsOutOfRange(double score)
+    [InlineData(11)]
+    [InlineData(-1)]
+    public void SurveyReviewCategory_New_ShouldThrowArgumentExceptionWhenScoreIsOutOfRange(int score)
     {
         //arrange
         //act

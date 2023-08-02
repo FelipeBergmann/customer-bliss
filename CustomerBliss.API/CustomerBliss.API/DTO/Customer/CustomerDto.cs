@@ -7,6 +7,7 @@ public record struct CustomerDto(Guid Id,
                           string ContactName,
                           string CompanyDocument,
                           double? LastReviewScore,
+                          DateOnly? LastReviewDate,
                           CustomerCategory Category,
                           DateOnly? InitialDate);
 
