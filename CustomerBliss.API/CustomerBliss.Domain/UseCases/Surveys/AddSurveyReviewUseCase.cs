@@ -54,6 +54,8 @@ public class AddSurveyReviewUseCase : UseCaseBase<AddSurveyReviewUseCaseCommand,
             customerIndex++;
         }
 
+        survey.FinalizeSurvey();
+
         _surveyRepository.Update(survey);
         await _surveyRepository.SaveChangesAsync();
 
