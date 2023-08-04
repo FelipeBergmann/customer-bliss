@@ -27,3 +27,14 @@ export type GetCustomerRequest = {
   orderByLastReviewDate?: boolean;
   orderByDesc?: boolean;
 };
+
+export type CreateCustomerRequest = {
+  name: string;
+  contactName: string;
+  companyDocument: string;
+  intialDate?: string | null;
+};
+
+export type CreateCustomerResponse = {
+  id: string;
+};

@@ -1,5 +1,11 @@
 import axios from 'axios';
-import { GetCustomer, GetCustomerRequest, Paginated } from './api.types';
+import {
+  CreateCustomerRequest,
+  CreateCustomerResponse,
+  GetCustomer,
+  GetCustomerRequest,
+  Paginated,
+} from './api.types';
 
 const axiosInstance = axios.create({
   baseURL: 'https://localhost:44323/api',
@@ -18,6 +24,11 @@ class api {
     data?: GetCustomerRequest
   ): Promise<Paginated<GetCustomer>> =>
     await axiosInstance.get('/v1/customer', { params: { ...data } });
+
+  postCustomer = async (
+    data: CreateCustomerRequest
+  ): Promise<CreateCustomerResponse> =>
+    await axiosInstance.post('/v1/customer', data);
 }
 
 export default new api();

@@ -33,6 +33,19 @@ export function Lookup() {
     loadCustomers();
   }
 
+  function transformCategory(category: string): string {
+    switch (category) {
+      case 'Promoter':
+        return 'Promotor';
+      case 'Neutral':
+        return 'Neutro';
+      case 'Detrator':
+        return 'Detrator';
+      default:
+        return 'Nenhum';
+    }
+  }
+
   const handleSearchNameInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -68,7 +81,7 @@ export function Lookup() {
               <td>{customer.name}</td>
               <td>{customer.contactName}</td>
               <td>{customer.companyDocument}</td>
-              <td>{customer.category}</td>
+              <td>{transformCategory(customer.category)}</td>
             </tr>
           ))}
         </tbody>

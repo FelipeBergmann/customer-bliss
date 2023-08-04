@@ -5,19 +5,20 @@ import {
   ErrorMessage,
   SubmitButton,
 } from './styles';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { format } from 'date-fns';
+import api from '../../../services/api';
 
 export function CustomerRegistrationPage() {
   const customerFormValidationSchema = zod.object({
     companyName: zod.string().min(2).max(150),
     contactName: zod.string().min(2).max(150),
-    companyDocument: zod.string().refine(
-      (value) => {
-        const cnpjRegex = /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/;
-        return cnpjRegex.test(value);
-      },
-      { message: 'CNPJ inválido.' }
-    ),
-    registrationDate: zod.date(),
+    companyDocument: zod.string(),
+    registrationDate: zod
+      .string()
+      .transform((str) =>
+        str == 'dd/mm/aaaa' ? null : format(new Date(str), 'yyyy-MM-dd')
+      ),
   });
 
   type CustomerFormType = zod.infer<typeof customerFormValidationSchema>;
@@ -27,10 +28,23 @@ export function CustomerRegistrationPage() {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<CustomerFormType>();
+  } = useForm<CustomerFormType>({
+    resolver: zodResolver(customerFormValidationSchema),
+  });
+
   const handleOnSubmit = (data: CustomerFormType) => {
-    console.log(data);
-    reset();
+    api
+      .postCustomer({
+        name: data.companyName,
+        contactName: data.contactName,
+        companyDocument: data.companyDocument,
+        intialDate: customerFormValidationSchema.safeParse(data).success
+          ? data.registrationDate
+          : null,
+      })
+      .then(() => {
+        reset();
+      });
   };
   return (
     <form onSubmit={handleSubmit(handleOnSubmit)}>
@@ -52,22 +66,17 @@ export function CustomerRegistrationPage() {
         </div>
 
         <div>
-          <label>CNPJ*:</label>
-          <input {...register('companyDocument', { required: true })} />
-          {errors.companyDocument && (
-            <ErrorMessage>Este campo é obrigatório.</ErrorMessage>
-          )}
+          <label>CNPJ:</label>
+          <input {...register('companyDocument', { required: false })} />
         </div>
 
         <div>
-          <label>Data em que se tornou cliente*:</label>
+          <label>Data em que se tornou cliente:</label>
           <input
             type="date"
-            {...register('registrationDate', { required: true })}
+            value={format(new Date(), 'yyyy-MM-dd')}
+            {...register('registrationDate', { required: false })}
           />
-          {errors.registrationDate && (
-            <ErrorMessage>Este campo é obrigatório.</ErrorMessage>
-          )}
         </div>
 
         <div>
